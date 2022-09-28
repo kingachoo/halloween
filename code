@@ -78,20 +78,52 @@ def all_white(delay=0.1):
     np.show()
     time.sleep(delay)
 
+def fade_out(colors, time_delay = 0.01):
+    mx = max(colors[0], max(colors[1], colors[2]))
+    r_inc = (colors[0] / mx)
+    g_inc = (colors[1] / mx)
+    b_inc = (colors[2] / mx)
+    r,g,b = (colors)
+    while(r >= 0 and g >= 0 and b >= 0):
+        r -= r_inc
+        g -= g_inc
+        b -= b_inc
+        np.fill((int(r), int(g), int(b)))
+        np.show()
+        time.sleep(time_delay)
+        print("r - {}, g - {}, b - {}".format(int(r),int(g),int(b)))
+        
+        
+def chase(color1, color2, loop = 20, count = 9, delay = 0.1):
+    result = 0
+    for outer in range(count * loop):
+        np.fill(color1)
+        for i in range(num_pixels):
+            if i % count == result:
+                np[i] = color2
+        np.show()
+        time.sleep(delay)
+        result += 1 
+        result %= count
+
 blink = Blink(np, speed=0.5, color=JADE)
 
 
 while True:
     for i in range(3):
         fire(orange, red)
-
     for i in range(2):
         all_black(0.1)
         all_white()
-
     all_black()
-
-    fade_in()
+    fade_in(green1)
     sparkle(black, green2)
     sparkle(black, green1)
     sparkle(black, green3)
+    fade_out(green1)
+    fade_out(green2)
+    fade_out(green3, time_delay = .001)
+    for i in range(5):
+        fire(green3, green1)
+    fade_out(green3, time_delay = .001)
+    chase((0, 0, 0), purple1)
