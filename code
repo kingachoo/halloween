@@ -1,0 +1,97 @@
+import board
+import time
+import neopixel
+import random
+from adafruit_led_animation.animation.blink import Blink
+from adafruit_led_animation.color import JADE
+
+num_pixels = 10
+pixel_pin = board.NEOPIXEL
+np = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=1.0, auto_write=False)
+
+
+white = [255, 255, 255]
+black = [0, 0, 0]
+orange = [255, 91, 0]
+red = [255, 20, 0]
+green = [0, 255, 0]
+
+green1 = [1, 64, 1]
+green2 = [1, 128, 1]
+green3 = [1, 255,1]
+purple1 = [168, 10, 255]
+
+
+
+'''
+Function: Fire
+Description: Creates a flame effect on a strip of neopixels
+Parameters: background: base color for flame, foreground: color used to flash / highlight
+return value: none
+'''
+def fire(background, foreground):
+    for j in range(20):
+        intensity = random.random() * 0.7 + 0.3
+        i_background = [int(i * intensity) for i in background]
+        np.fill(i_background)
+        for i in range(random.randint(2, int(num_pixels/5))):
+            intensity = random.random() * 0.7 + 0.3
+            i_foreground = [int(i * intensity) for i in foreground]
+            np[random.randint(0, num_pixels-1)] = i_foreground
+        np.show()
+        time.sleep(0.06)
+
+def sparkle(background, foreground, loop = 10, delay=0.08):
+    for outer in range(loop):
+        np.fill(background)
+        for i in range(np.n / 8):
+          np[random.randint(0, np.n-1)] = foreground
+        np.show()
+        time.sleep(delay)
+
+def fade_in(rgb, delay = 0.01):
+    r, g, b = rgb
+    r_final = r
+    g_final = g
+    b_final = b
+    print(r_final, g_final, b_final)
+    maximum = max(rgb[0], max(rgb[1], rgb[2]))
+    r_inc = rgb[0] / maximum
+    g_inc = rgb[1] / maximum
+    b_inc = rgb[2] / maximum
+    r, g, b = 0, 0, 0
+    while r <= r_final and g <= g_final and b <= b_final:
+        r += r_inc
+        g += g_inc
+        b += b_inc
+        np.fill((int(r), int(g), int(b)))
+        np.show()
+        time.sleep(delay)
+
+def all_black(delay=0.3):
+    np.fill(black)
+    np.show()
+    time.sleep(delay)
+
+def all_white(delay=0.1):
+    np.fill(white)
+    np.show()
+    time.sleep(delay)
+
+blink = Blink(np, speed=0.5, color=JADE)
+
+
+while True:
+    for i in range(3):
+        fire(orange, red)
+
+    for i in range(2):
+        all_black(0.1)
+        all_white()
+
+    all_black()
+
+    fade_in()
+    sparkle(black, green2)
+    sparkle(black, green1)
+    sparkle(black, green3)
