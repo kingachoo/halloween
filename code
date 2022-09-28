@@ -2,25 +2,22 @@ import board
 import time
 import neopixel
 import random
-from adafruit_led_animation.animation.blink import Blink
-from adafruit_led_animation.color import JADE
+
 
 num_pixels = 10
 pixel_pin = board.NEOPIXEL
 np = neopixel.NeoPixel(pixel_pin, num_pixels, brightness=1.0, auto_write=False)
 
-
+#colors
 white = [255, 255, 255]
 black = [0, 0, 0]
 orange = [255, 91, 0]
 red = [255, 20, 0]
 green = [0, 255, 0]
-
 green1 = [1, 64, 1]
 green2 = [1, 128, 1]
 green3 = [1, 255,1]
 purple1 = [168, 10, 255]
-
 
 
 '''
@@ -41,6 +38,16 @@ def fire(background, foreground):
         np.show()
         time.sleep(0.06)
 
+'''
+function: sparkle
+description: starts the neopixels at a base color and chooses n number of neopixels
+to turn a chosen color
+in intervals to create a sparkling effect.
+parameters: background - background color; foreground - color for pixles that "sparkle"; delay - time between changes; loop - number of
+"sparkles" you
+want
+return value: none
+'''
 def sparkle(background, foreground, loop = 10, delay=0.08):
     for outer in range(loop):
         np.fill(background)
@@ -49,6 +56,14 @@ def sparkle(background, foreground, loop = 10, delay=0.08):
         np.show()
         time.sleep(delay)
 
+'''
+function: fade_in
+description: starts the neopixels at black and changes them portionally to the color
+that
+is passed as a parameter.
+parameters: rgb - color to fade to; delay - time between changes
+return value: none
+'''
 def fade_in(rgb, delay = 0.01):
     r, g, b = rgb
     r_final = r
@@ -68,16 +83,36 @@ def fade_in(rgb, delay = 0.01):
         np.show()
         time.sleep(delay)
 
+'''
+function: all_black
+description: displays all black neopixels for a given time
+parameters: delay - time between changes
+return value: none
+'''
 def all_black(delay=0.3):
     np.fill(black)
     np.show()
     time.sleep(delay)
 
+'''
+function: all_white
+description: displays all white neopixels for a given time
+parameters: delay - time between changes
+return value: none
+'''
 def all_white(delay=0.1):
     np.fill(white)
     np.show()
     time.sleep(delay)
-
+    
+'''
+function: fade_out
+description: starts the neopixels at the color that is passed as a parameter and
+changes
+them portionally to black.
+parameters: colors - color to fade to; time_delay - time between changes
+return value: none
+'''
 def fade_out(colors, time_delay = 0.01):
     mx = max(colors[0], max(colors[1], colors[2]))
     r_inc = (colors[0] / mx)
@@ -93,7 +128,18 @@ def fade_out(colors, time_delay = 0.01):
         time.sleep(time_delay)
         print("r - {}, g - {}, b - {}".format(int(r),int(g),int(b)))
         
-        
+'''
+function: chase
+description: starts at a base color and a second color is put in for every nth
+neopixel. After
+every delay, the second color pattern shifts down one neopixel to create an effect
+that looks
+like the colors are rotating in a circle.
+parameters: color1 - background color; color2 - color that is being "chased"; loop -
+the number
+of spins you want; count - the shift pattern number; delay - time between changes
+return value: none
+'''        
 def chase(color1, color2, loop = 20, count = 9, delay = 0.1):
     result = 0
     for outer in range(count * loop):
@@ -106,7 +152,6 @@ def chase(color1, color2, loop = 20, count = 9, delay = 0.1):
         result += 1 
         result %= count
 
-blink = Blink(np, speed=0.5, color=JADE)
 
 
 while True:
